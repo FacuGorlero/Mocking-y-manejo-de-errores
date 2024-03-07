@@ -1,11 +1,13 @@
 const {configObject} = require('./index.js');
 const passport = require('passport');
+const passport_jwt = require('passport-jwt')
 const jwt = require('passport-jwt');
 const GithubStrategy = require('passport-github2');
 const {userService} = require('../repositories/services.js');
+const { logger } = require('../utils/logger')
 
-const JWTStrategy = jwt.Strategy;
-const ExtractJWT = jwt.ExtractJwt;
+const JWTStrategy = passport_jwt.Strategy;
+const ExtractJWT = passport_jwt.ExtractJwt;
 const usersService = userService;
 console.log(configObject)
 
@@ -32,6 +34,7 @@ passport.use("jwt", new JWTStrategy(
           // Por ejemplo, puedes hacer algo como: const user = await User.findById(jwt_payload.sub);
 
           // Si la verificación es exitosa, se pasa el usuario al siguiente middleware
+          logger.info('jwt_payload passport config: ', jwt_payload)
           return done(null, jwt_payload);
       } catch (error) {
           return done(error);

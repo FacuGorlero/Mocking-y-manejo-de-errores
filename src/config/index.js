@@ -3,7 +3,7 @@ const {program} = require('./commander.js')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const {connect} = require ('mongoose')
-
+const { logger } = require('../utils/logger')
 
 const opts = program.opts();
 
@@ -23,6 +23,7 @@ const configObject = {
 
     connectDB: async () => {
         MongoSingleton.getInstance();
+        logger.info("Db connected")
     },
     sessionAtlas: (app) => {
         app.use(
@@ -50,10 +51,10 @@ class MongoSingleton {
   
     static getInstance() {
       if(!this.instance){
-        console.log('Conectado a Base de Datos');
+        logger.info('Connecting to data base')
         return this.instance = new MongoSingleton();
       }
-      console.log('Base de Datos ya conectada');
+    logger.info('Base de Datos ya conectada');
       return this.instance;
     }
   }

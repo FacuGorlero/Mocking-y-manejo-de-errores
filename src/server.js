@@ -10,9 +10,11 @@ const configureSocketIO = require('./helper/socketio.js')
 const handlebars = require('express-handlebars')
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
+const { logger, addLogger } = require('./utils/logger.js')
 
 const PORT = process.env.PORT
 const app = express()
+app.use(addLogger)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -21,16 +23,17 @@ app.use(cookie())
 app.use(session({
   store: mongoStore.create({
     mongoUrl: process.env.MONGO_URI, 
-    mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    },
+    // mongoOptions: {
+    //     useNewUrlParser: true,
+    //     useUnifiedTopology: true,
+    // },
     ttl: 15000000000,
   }),
   secret: 'secret',
   resave: true,
   saveUninitialized: true
 }))
+
 app.use(appRouter)
 
 /* app.use(session({
